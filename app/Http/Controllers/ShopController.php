@@ -16,15 +16,18 @@ class ShopController extends Controller
 
     public function addToCart(Request $request)
     {
-        //セッションidに対応するcartがなければからの配列を返す
-        $cart = session()->get('cart'[]);
-        //HTTPリクエストから product_id の値を取得し、変数 $productId に格納
+        // セッションIDに対応するカートがなければ空の配列を返す
+        $cart = session()->get('cart', []);
+
+        // HTTPリクエストから product_id の値を取得し、変数 $productId に格納
         $productId = $request->input('product_id');
         $quantity = $request->input('quantity', 1);
 
+        // カート内に同じ商品が既に存在する場合、数量を増やす
         if (isset($cart[$productId])) {
             $cart[$productId]['quantity'] += $quantity;
         } else {
+            // 商品をデータベースから取得し、カートに追加
             $product = Product::find($productId);
             $cart[$productId] = [
                 "name" => $product->name,
@@ -32,14 +35,21 @@ class ShopController extends Controller
                 "price" => $product->price,
             ];
         }
+
+        // カートをセッションに保存
         session()->put('cart', $cart);
+
+        // ショップインデックスページにリダイレクト
         return redirect()->route('shop.index');
     }
+
     public function viewCart()
     {
+        // カートをセッションから取得し、ビューに渡す
         $cart = session()->get('cart', []);
         return view('shop.cart', compact('cart'));
     }
+
 
     public function placeOrder(Request $request)
     {
@@ -57,11 +67,19 @@ class ShopController extends Controller
         return redirect()->route('shop.index')->with('success', 'Order placed successfully!');
     }
 
-    //商品追加画面に遷移するためのメソッド
+    //管理者画面へ移動
+    public function administrator()
+    {
+        $products = product::all();
+        return view('shop.administrator', compact('products'));
+    }
+    //管理者→商品登録画面
     public function create()
     {
         return view('shop.create');
     }
+
+
     //商品登録メソッド
     public function store(Request $request)
     {
@@ -78,5 +96,15 @@ class ShopController extends Controller
         $product->price = $request->price;
         $product->save();
         return redirect()->route('shop.index')->with('success', 'Product added successfully');
+    }
+
+    //登録している商品を削除
+    public function delete($id)
+    {
+        //指定されたIDに基づいてデータベースからレコードを検索
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('shop.administrator')->with('success', 'Product deleted successfully');
     }
 }

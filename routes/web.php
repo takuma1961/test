@@ -19,5 +19,11 @@ Route::get('/cart', [ShopController::class, 'viewCart'])->name('shop.cart');
 Route::get('/checkout', [ShopController::class, 'checkout'])->name('shop.checkout');
 Route::post('/checkout', [ShopController::class, 'placeOrder'])->name('shop.placeOrder');
 //getに修正
-Route::get('/products/create', [ShopController::class, 'create'])->name('shop.create');
-Route::post('/products', [ShopController::class, 'store'])->name('shop.store');
+Route::get('/administrator', [ShopController::class, 'administrator'])->name('shop.administrator');
+Route::post('/administrator/create/store', [ShopController::class, 'store'])->name('shop.store');
+Route::get('/administrator/create', [ShopController::class, 'create'])->name('shop.create');
+Route::delete('/administrator/create/{id}',[ShopController::class,'delete'])->name('shop.delete');
+
+Route::get('/phpinfo', function () {
+    phpinfo();
+});

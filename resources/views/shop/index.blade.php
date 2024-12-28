@@ -2,7 +2,6 @@
 
 @section('content')
     <h1>Products</h1>
-    <a href="{{ route('shop.create') }}" class="btn btn-primary">商品登録</a>
     <table class="table table-bordered">
         <thead>
             <tr>
