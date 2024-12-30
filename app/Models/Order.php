@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    //fillableで指定している'customer_name', 'customer_mail', 'payment_method', 'total'以外のDB更新は制限
     protected $fillable = ['customer_name', 'customer_mail', 'payment_method', 'total'];
     public function products()
     {

@@ -1,0 +1,13 @@
+/* 商品がカートに追加されるアニメーション */
+@keyframes bounce {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* アニメーション用のクラス */
+.animate-cart {
+    animation: bounce 0.5s ease-in-out;
+}
